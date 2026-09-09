@@ -1,0 +1,16 @@
+# INUNDA — Docker Compose (optional)
+# NOTE: for reliable proxy between containers, the frontend vite.config.ts proxy
+# should point to http://api:8000 within Docker. For the simple local demo, run
+# the backend (uvicorn) and frontend (npm dev) directly instead of Docker.
+services:
+  api:
+    build: ./backend
+    ports: ["8000:8000"]
+    environment:
+      - PYTHONPATH=/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+  ui:
+    build: ./frontend
+    ports: ["5173:5173"]
+    depends_on: [api]
+    command: npm run dev
